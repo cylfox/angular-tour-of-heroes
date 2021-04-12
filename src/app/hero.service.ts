@@ -12,6 +12,11 @@ import { HEROES } from './mock-heroes';
 export class HeroService {
   private heroesUrl = 'api/heroes';
 
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
+
+
   constructor(private messageService: MessageService, private http: HttpClient) { }
 
   getHeroes(): Observable<Hero[]> {
@@ -59,4 +64,10 @@ export class HeroService {
     }
   }
 
+  updateHero(hero: Hero): Observable<any> {
+    return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
+      tap(_ => this.log(`updated hero id=${hero.id}`)),
+      catchError(this.handleError<any>('updateHero'))
+    );
+  }
 }
